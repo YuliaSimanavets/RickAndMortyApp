@@ -19,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = windowScene
         
         let viewController = CharactersViewController()
+        let dataManager = DataManager()
+        viewController.set(dataManager)
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
         
