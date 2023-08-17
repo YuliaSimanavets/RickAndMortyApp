@@ -10,12 +10,17 @@ import UIKit
 struct CharactersViewModel {
     let image: UIImage?
     let name: String
+    let url: String
 }
 
 class CharactersCollectionViewCell: BaseCollectionViewCell {
     
     static var identifier: String {
         return String(describing: CharactersCollectionViewCell.self)
+    }
+    
+    private enum Offset: CGFloat {
+        case offset = 8
     }
     
     private let characterNameLabel: UILabel = {
@@ -30,6 +35,7 @@ class CharactersCollectionViewCell: BaseCollectionViewCell {
     private let characterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8
+        imageView.backgroundColor = .white
         imageView.contentMode = .scaleAspectFit
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
@@ -48,13 +54,13 @@ class CharactersCollectionViewCell: BaseCollectionViewCell {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            characterImageView.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-            characterImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            characterImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            characterImageView.topAnchor.constraint(equalTo: topAnchor, constant: Offset.offset.rawValue),
+            characterImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Offset.offset.rawValue),
+            characterImageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Offset.offset.rawValue),
             characterImageView.heightAnchor.constraint(equalToConstant: 140),
             characterImageView.widthAnchor.constraint(equalToConstant: 140),
             
-            characterNameLabel.topAnchor.constraint(equalTo: characterImageView.bottomAnchor, constant: 20),
+            characterNameLabel.topAnchor.constraint(equalTo: characterImageView.bottomAnchor, constant: Offset.offset.rawValue * 2),
             characterNameLabel.centerXAnchor.constraint(equalTo: characterImageView.centerXAnchor),
             characterNameLabel.leadingAnchor.constraint(equalTo: characterImageView.leadingAnchor),
             characterNameLabel.trailingAnchor.constraint(equalTo: characterImageView.trailingAnchor),
@@ -68,7 +74,7 @@ class CharactersCollectionViewCell: BaseCollectionViewCell {
     }
     
     static func size(_ data: CharactersViewModel, containerSize: CGSize) -> CGSize {
-        let cellHeight: CGFloat = 140 + 8 + 20 + 25 + 20
+        let cellHeight: CGFloat = 140 + 25 + Offset.offset.rawValue * 5
         return .init(width: containerSize.width / 2 - CGFloat(20), height: cellHeight)
     }
 }

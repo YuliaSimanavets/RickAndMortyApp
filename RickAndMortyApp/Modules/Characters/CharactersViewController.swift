@@ -7,12 +7,15 @@
 
 import UIKit
 
-enum Offset: CGFloat {
-    case generalOffset = 20
-}
-
 class CharactersViewController: UIViewController {
 
+    private enum Offset: CGFloat {
+        case spaceOffset = 20
+    }
+    
+    private var dataManager: DataManagerProtocol?
+    private let activityIndicator = UIActivityIndicatorView()
+    
     private let charactersLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 25, weight: .medium)
@@ -26,7 +29,7 @@ class CharactersViewController: UIViewController {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 0
+        layout.minimumLineSpacing = 20
         collectionView.isScrollEnabled = true
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -34,6 +37,7 @@ class CharactersViewController: UIViewController {
         return collectionView
     }()
     
+    private var charactersArray = [CharacterModel]()
     private var allCharacters = [CharactersViewModel]()
     
     override func viewDidLoad() {
@@ -48,27 +52,62 @@ class CharactersViewController: UIViewController {
         charactersCollectionView.dataSource = self
         charactersCollectionView.register(CharactersCollectionViewCell.self,
                                           forCellWithReuseIdentifier: CharactersCollectionViewCell.identifier)
-        // MARK: - will change
-        allCharacters = [
-            .init(image: UIImage(systemName: ""), name: "Rick"),
-            .init(image: UIImage(systemName: ""), name: "Morty")
-        ]
         
+        createActivityIndicator()
+        
+        dataManager?.loadCharacters { [weak self] characterArray in
+            guard let self else { return }
+            DispatchQueue.main.async {
+                self.charactersArray = characterArray
+                self.activityIndicator.stopAnimating()
+                self.charactersCollectionView.reloadData()
+                
+                self.allCharacters = characterArray.map({ CharactersViewModel(image: UIImage(systemName: ""),  //
+                                                                              name: $0.name,
+                                                                              url: $0.url)
+                }).compactMap({ $0 })
+            }
+        }
+
         setupConstraints()
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            charactersLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Offset.generalOffset.rawValue),
-            charactersLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Offset.generalOffset.rawValue),
-            charactersLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Offset.generalOffset.rawValue),
-            charactersLabel.heightAnchor.constraint(equalToConstant: Offset.generalOffset.rawValue * 2),
+            charactersLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Offset.spaceOffset.rawValue),
+            charactersLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Offset.spaceOffset.rawValue),
+            charactersLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Offset.spaceOffset.rawValue),
+            charactersLabel.heightAnchor.constraint(equalToConstant: Offset.spaceOffset.rawValue * 2),
             
-            charactersCollectionView.topAnchor.constraint(equalTo: charactersLabel.bottomAnchor, constant: Offset.generalOffset.rawValue),
-            charactersCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Offset.generalOffset.rawValue),
-            charactersCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Offset.generalOffset.rawValue),
+            charactersCollectionView.topAnchor.constraint(equalTo: charactersLabel.bottomAnchor, constant: Offset.spaceOffset.rawValue),
+            charactersCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Offset.spaceOffset.rawValue),
+            charactersCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Offset.spaceOffset.rawValue),
             charactersCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+    
+    private func createActivityIndicator() {
+        activityIndicator.center = self.view.center
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        activityIndicator.color = .white
+        activityIndicator.style = .medium
+    }
+    
+    func set(_ dataManager: DataManagerProtocol) {
+        self.dataManager = dataManager
+    }
+    
+    @objc
+    func tapAction(by selectedIndex: IndexPath) {
+        
+        let characterURL = allCharacters[selectedIndex.row].url
+        
+        let detailsVC = DetailsViewController()
+        navigationController?.pushViewController(detailsVC, animated: true)
+                
+        detailsVC.set(characterURL: characterURL)
+        detailsVC.set(dataManager: dataManager ?? DataManager())
     }
 }
 
@@ -95,5 +134,9 @@ extension CharactersViewController: UICollectionViewDelegate,
         let frame = collectionView.frame
         let item = allCharacters[indexPath.item]
         return CharactersCollectionViewCell.size(item, containerSize: frame.size)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        tapAction(by: indexPath)
     }
 }
