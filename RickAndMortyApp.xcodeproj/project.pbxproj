@@ -17,6 +17,7 @@
 		CA0CC2362A8E40A100CE2973 /* RickAndMortyAppUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0CC2352A8E40A100CE2973 /* RickAndMortyAppUITestsLaunchTests.swift */; };
 		CA0CC2472A8E42F000CE2973 /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0CC2462A8E42F000CE2973 /* BaseCollectionViewCell.swift */; };
 		CA0CC24A2A8E431B00CE2973 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0CC2492A8E431B00CE2973 /* UIColorExtension.swift */; };
+		CA0CC24C2A8E5EA500CE2973 /* CharactersCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA0CC24B2A8E5EA500CE2973 /* CharactersCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		CA0CC2352A8E40A100CE2973 /* RickAndMortyAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RickAndMortyAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CA0CC2462A8E42F000CE2973 /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		CA0CC2492A8E431B00CE2973 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		CA0CC24B2A8E5EA500CE2973 /* CharactersCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersCollectionViewCell.swift; sourceTree = "<group>"; };
+		CA0CC2512A8E663400CE2973 /* CharactersModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CharactersModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -143,6 +146,8 @@
 			isa = PBXGroup;
 			children = (
 				CA0CC2162A8E40A000CE2973 /* CharactersViewController.swift */,
+				CA0CC24D2A8E640F00CE2973 /* Cell */,
+				CA0CC2502A8E663100CE2973 /* Model */,
 			);
 			path = Characters;
 			sourceTree = "<group>";
@@ -168,6 +173,22 @@
 				CA0CC2492A8E431B00CE2973 /* UIColorExtension.swift */,
 			);
 			path = Extension;
+			sourceTree = "<group>";
+		};
+		CA0CC24D2A8E640F00CE2973 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				CA0CC24B2A8E5EA500CE2973 /* CharactersCollectionViewCell.swift */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		CA0CC2502A8E663100CE2973 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CA0CC2512A8E663400CE2973 /* CharactersModel.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -304,6 +325,7 @@
 				CA0CC2472A8E42F000CE2973 /* BaseCollectionViewCell.swift in Sources */,
 				CA0CC24A2A8E431B00CE2973 /* UIColorExtension.swift in Sources */,
 				CA0CC2132A8E40A000CE2973 /* AppDelegate.swift in Sources */,
+				CA0CC24C2A8E5EA500CE2973 /* CharactersCollectionViewCell.swift in Sources */,
 				CA0CC2152A8E40A000CE2973 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

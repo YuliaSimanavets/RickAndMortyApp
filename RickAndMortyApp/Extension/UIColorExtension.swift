@@ -14,7 +14,7 @@ extension UIColor {
         #colorLiteral(red: 0.01332890149, green: 0.04810451716, blue: 0.1187042817, alpha: 1)
     }
     
-    static var backViewControllers: UIColor {
+    static var backgroundForCell: UIColor {
         #colorLiteral(red: 0.1471939981, green: 0.1571852863, blue: 0.2122484446, alpha: 1)
     }
 }
