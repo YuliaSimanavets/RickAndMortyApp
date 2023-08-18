@@ -26,12 +26,12 @@ class CharactersCollectionViewCell: BaseCollectionViewCell {
     private let characterNameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .white
+        label.textColor = .title
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+//    MARK: - will change
     private let characterImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.layer.cornerRadius = 8

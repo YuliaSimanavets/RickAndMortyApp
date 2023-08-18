@@ -19,7 +19,7 @@ class CharactersViewController: UIViewController {
     private let charactersLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 25, weight: .medium)
-        label.textColor = .white
+        label.textColor = .title
         label.text = "Characters"
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

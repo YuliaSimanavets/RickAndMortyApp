@@ -35,7 +35,7 @@ class PhotoAndNameCollectionViewCell: BaseCollectionViewCell {
     private let characterNameLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 22, weight: .medium)
-        label.textColor = .white
+        label.textColor = .title
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

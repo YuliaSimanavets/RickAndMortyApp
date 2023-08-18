@@ -35,7 +35,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     private let speciesLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .light)
-        label.textColor = .white
+        label.textColor = .title
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -44,7 +44,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     private let typeLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .light)
-        label.textColor = .white
+        label.textColor = .title
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -53,7 +53,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     private let genderLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .light)
-        label.textColor = .white
+        label.textColor = .title
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -71,7 +71,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     private let speciesDataLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
-        label.textColor = .white
+        label.textColor = .title
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -80,7 +80,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     private let typeDataLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
-        label.textColor = .white
+        label.textColor = .title
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -89,7 +89,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     private let genderDataLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
-        label.textColor = .white
+        label.textColor = .title
         label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

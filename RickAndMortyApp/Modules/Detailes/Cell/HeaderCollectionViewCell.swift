@@ -24,7 +24,7 @@ class HeaderCollectionViewCell: BaseCollectionViewCell {
     private let headerLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .white
+        label.textColor = .title
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
