@@ -25,7 +25,7 @@ class CharactersCollectionViewCell: BaseCollectionViewCell {
     
     private let characterNameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 22)
+        label.font = .systemFont(ofSize: 17)
         label.textColor = .white
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -64,7 +64,7 @@ class CharactersCollectionViewCell: BaseCollectionViewCell {
             characterNameLabel.centerXAnchor.constraint(equalTo: characterImageView.centerXAnchor),
             characterNameLabel.leadingAnchor.constraint(equalTo: characterImageView.leadingAnchor),
             characterNameLabel.trailingAnchor.constraint(equalTo: characterImageView.trailingAnchor),
-            characterNameLabel.heightAnchor.constraint(equalToConstant: 25)
+            characterNameLabel.heightAnchor.constraint(equalToConstant: 20)
         ])
     }
     
@@ -74,7 +74,7 @@ class CharactersCollectionViewCell: BaseCollectionViewCell {
     }
     
     static func size(_ data: CharactersViewModel, containerSize: CGSize) -> CGSize {
-        let cellHeight: CGFloat = 140 + 25 + Offset.offset.rawValue * 5
-        return .init(width: containerSize.width / 2 - CGFloat(20), height: cellHeight)
+        let cellHeight: CGFloat = 140 + 20 + Offset.offset.rawValue * 5
+        return .init(width: containerSize.width / 2 - CGFloat(10), height: cellHeight)
     }
 }
