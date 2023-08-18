@@ -12,7 +12,9 @@ class DetailsViewController: UIViewController {
     private enum CellType {
         case photoName(PhotoNameViewModel)
         case header(HeaderViewModel)
-        case info(InfoViewModel)
+        case infoBlock(InfoViewModel)
+        case originBlock(OriginViewModel)
+        case episodesBlock(EpisodViewModel)
     }
     
     private var dataManager: DataManagerProtocol?
@@ -35,7 +37,6 @@ class DetailsViewController: UIViewController {
         collectionView.isScrollEnabled = true
         collectionView.backgroundColor = .clear
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-//        collectionView.showsVerticalScrollIndicator = false
         return collectionView
     }()
     
@@ -64,6 +65,10 @@ class DetailsViewController: UIViewController {
                                        forCellWithReuseIdentifier: HeaderCollectionViewCell.identifier)
         detailsCollectionView.register(InfoCollectionViewCell.self,
                                        forCellWithReuseIdentifier: InfoCollectionViewCell.identifier)
+        detailsCollectionView.register(OriginCollectionViewCell.self,
+                                       forCellWithReuseIdentifier: OriginCollectionViewCell.identifier)
+        detailsCollectionView.register(EpisodeCollectionViewCell.self,
+                                       forCellWithReuseIdentifier: EpisodeCollectionViewCell.identifier)
         
         createActivityIndicator()
         
@@ -111,10 +116,27 @@ class DetailsViewController: UIViewController {
         
 //        MARK: - Will change
         let photoNameCell: PhotoNameViewModel = .init(photo: UIImage(systemName: "house"), name: "Rick", status: "Alive")
-        let headerCell: HeaderViewModel = .init(header: "Info")
+        let infoHeaderCell: HeaderViewModel = .init(header: "Info")
         let infoCell: InfoViewModel = .init(species: "Human", type: "None", gender: "Male")
         
-        allCells = [.photoName(photoNameCell), .header(headerCell), .info(infoCell)]
+        let originHeaderCell: HeaderViewModel = .init(header: "Origin")
+        let originCell: OriginViewModel = .init(origin: "Earth")
+        
+        let episodesHeaderCell: HeaderViewModel = .init(header: "Episodes")
+        let episodesCell: [EpisodViewModel] = [
+            .init(episodesName: "Pilot", episodeAndSeasonNumber: "Episode: 1, Season: 1", date: "December 2, 2013"),
+            .init(episodesName: "Mile", episodeAndSeasonNumber: "Episode: 2, Season: 1", date: "December 9, 2013"),
+            .init(episodesName: "Extra button", episodeAndSeasonNumber: "Episode: 3, Season: 1", date: "December 16, 2013")
+        ]
+        
+        allCells = [.photoName(photoNameCell), .header(infoHeaderCell), .infoBlock(infoCell),
+                    .header(originHeaderCell), .originBlock(originCell),
+                    .header(episodesHeaderCell)]
+        
+        for i in episodesCell {
+            allCells.append(.episodesBlock(i))
+        }
+        
         detailsCollectionView.reloadData()
     }
 }
@@ -140,8 +162,18 @@ extension DetailsViewController: UICollectionViewDelegate,
                 cell.set(model)
                 return cell
             }
-        case let .info(model):
+        case let .infoBlock(model):
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: InfoCollectionViewCell.identifier, for: indexPath) as? InfoCollectionViewCell {
+                cell.set(model)
+                return cell
+            }
+        case let .originBlock(model):
+            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: OriginCollectionViewCell.identifier, for: indexPath) as? OriginCollectionViewCell {
+                cell.set(model)
+                return cell
+            }
+        case let .episodesBlock(model):
+            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EpisodeCollectionViewCell.identifier, for: indexPath) as? EpisodeCollectionViewCell {
                 cell.set(model)
                 return cell
             }
@@ -159,8 +191,12 @@ extension DetailsViewController: UICollectionViewDelegate,
             return PhotoAndNameCollectionViewCell.size(model, containerSize: frame.size)
         case let .header(model):
             return HeaderCollectionViewCell.size(model, containerSize: frame.size)
-        case let .info(model):
+        case let .infoBlock(model):
             return InfoCollectionViewCell.size(model, containerSize: frame.size)
+        case let .originBlock(model):
+            return OriginCollectionViewCell.size(model, containerSize: frame.size)
+        case let .episodesBlock(model):
+            return EpisodeCollectionViewCell.size(model, containerSize: frame.size)
         }
     }
 }
