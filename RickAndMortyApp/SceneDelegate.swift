@@ -21,7 +21,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let viewController = CharactersViewController()
         let dataManager = DataManager()
         viewController.set(dataManager)
-        window?.rootViewController = viewController
+        let navController = UINavigationController(rootViewController: viewController)
+        window?.rootViewController = navController
         window?.makeKeyAndVisible()
         
     }
