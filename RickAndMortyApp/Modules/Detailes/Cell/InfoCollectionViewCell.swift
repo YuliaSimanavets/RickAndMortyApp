@@ -36,7 +36,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .light)
         label.textColor = .white
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -45,7 +45,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .light)
         label.textColor = .white
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -54,7 +54,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .light)
         label.textColor = .white
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -63,7 +63,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
         let stackView = UIStackView()
         stackView.axis = .vertical
         stackView.spacing = Offset.offset.rawValue
-        stackView.alignment = .leading
+        stackView.alignment = .trailing
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
@@ -72,7 +72,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         label.textColor = .white
-        label.textAlignment = .center
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -81,7 +81,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         label.textColor = .white
-        label.textAlignment = .center
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -90,7 +90,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         label.textColor = .white
-        label.textAlignment = .center
+        label.textAlignment = .right
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -98,9 +98,10 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     override func setupView() {
         super.setupView()
         backgroundColor = .backgroundForCell
+        layer.cornerRadius = 10
         addSubview(speciesLabel)
         setupInfoStackView()
-        
+        setupInfoDataStackView()
         setupConstraints()
     }
     

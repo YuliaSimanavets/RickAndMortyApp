@@ -44,7 +44,7 @@ class DetailsViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
-//        getFavourites()
+        createAllCells()
         detailsCollectionView.reloadData()
     }
     
@@ -70,8 +70,8 @@ class DetailsViewController: UIViewController {
 //        dataManager?.getDetails(url: characterURL, completion: { [weak self] characterDetails in
 //            guard let self else { return }
 //
-//
 //        })
+        
         createAllCells()
         print("\(allCells.count)")
         setupConstraints()
@@ -79,7 +79,10 @@ class DetailsViewController: UIViewController {
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-
+            detailsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            detailsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            detailsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            detailsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
     
@@ -105,6 +108,8 @@ class DetailsViewController: UIViewController {
     }
     
     private func createAllCells() {
+        
+//        MARK: - Will change
         let photoNameCell: PhotoNameViewModel = .init(photo: UIImage(systemName: "house"), name: "Rick", status: "Alive")
         let headerCell: HeaderViewModel = .init(header: "Info")
         let infoCell: InfoViewModel = .init(species: "Human", type: "None", gender: "Male")
