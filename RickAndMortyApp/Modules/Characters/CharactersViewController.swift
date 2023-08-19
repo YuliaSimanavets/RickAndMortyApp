@@ -37,7 +37,6 @@ class CharactersViewController: UIViewController {
         return collectionView
     }()
     
-    private var charactersArray = [CharacterModel]()
     private var allCharacters = [CharactersViewModel]()
     
     override func viewDidLoad() {
@@ -58,7 +57,6 @@ class CharactersViewController: UIViewController {
         dataManager?.loadCharacters { [weak self] characterArray in
             guard let self else { return }
             DispatchQueue.main.async {
-                self.charactersArray = characterArray
                 self.activityIndicator.stopAnimating()
                 self.charactersCollectionView.reloadData()
                 

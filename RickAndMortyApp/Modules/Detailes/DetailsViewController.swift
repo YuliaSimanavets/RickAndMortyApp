@@ -41,14 +41,7 @@ class DetailsViewController: UIViewController {
     }()
     
     private var allCells = [CellType]()
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
 
-        createAllCells()
-        detailsCollectionView.reloadData()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -71,14 +64,8 @@ class DetailsViewController: UIViewController {
                                        forCellWithReuseIdentifier: EpisodeCollectionViewCell.identifier)
         
         createActivityIndicator()
-        
-//        dataManager?.getDetails(url: characterURL, completion: { [weak self] characterDetails in
-//            guard let self else { return }
-//
-//        })
-        
-        createAllCells()
-        print("\(allCells.count)")
+
+        getInfoForCells()
         setupConstraints()
     }
     
@@ -112,31 +99,35 @@ class DetailsViewController: UIViewController {
         self.dataManager = dataManager
     }
     
-    private func createAllCells() {
+    private func getInfoForCells() {
         
-//        MARK: - Will change
-        let photoNameCell: PhotoNameViewModel = .init(photo: UIImage(systemName: "house"), name: "Rick", status: "Alive")
-        let infoHeaderCell: HeaderViewModel = .init(header: "Info")
-        let infoCell: InfoViewModel = .init(species: "Human", type: "None", gender: "Male")
-        
-        let originHeaderCell: HeaderViewModel = .init(header: "Origin")
-        let originCell: OriginViewModel = .init(origin: "Earth")
-        
-        let episodesHeaderCell: HeaderViewModel = .init(header: "Episodes")
-        let episodesCell: [EpisodViewModel] = [
-            .init(episodesName: "Pilot", episodeAndSeasonNumber: "Episode: 1, Season: 1", date: "December 2, 2013"),
-            .init(episodesName: "Mile", episodeAndSeasonNumber: "Episode: 2, Season: 1", date: "December 9, 2013"),
-            .init(episodesName: "Extra button", episodeAndSeasonNumber: "Episode: 3, Season: 1", date: "December 16, 2013")
-        ]
-        
-        allCells = [.photoName(photoNameCell), .header(infoHeaderCell), .infoBlock(infoCell),
-                    .header(originHeaderCell), .originBlock(originCell),
-                    .header(episodesHeaderCell)]
-        
-        for i in episodesCell {
-            allCells.append(.episodesBlock(i))
-        }
-        
+        dataManager?.getDetails(url: characterURL, completion: { [weak self] details in
+            guard let self else { return }
+
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                self.detailsCollectionView.reloadData()
+                
+                let photoNameCell: PhotoNameViewModel = .init(photo: UIImage(systemName: "house"),
+                                                              name: details?.name ?? "",
+                                                              status: details?.status ?? "")
+                let infoHeaderCell: HeaderViewModel = .init(header: "Info")
+                let infoCell: InfoViewModel = .init(species: details?.species ?? "", type: details?.type ?? "None", gender: details?.gender ?? "")
+
+                let originHeaderCell: HeaderViewModel = .init(header: "Origin")
+                let originCell: OriginViewModel = .init(origin: details?.origin.name ?? "")
+                
+                let episodesHeaderCell: HeaderViewModel = .init(header: "Episodes")
+                
+
+                self.allCells = [.photoName(photoNameCell), .header(infoHeaderCell), .infoBlock(infoCell),
+                                 .header(originHeaderCell), .originBlock(originCell),
+                                 .header(episodesHeaderCell)]
+                
+
+            }
+        })
+
         detailsCollectionView.reloadData()
     }
 }

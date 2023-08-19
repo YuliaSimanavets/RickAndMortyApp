@@ -9,8 +9,10 @@ import Foundation
 import UIKit
 
 protocol DataManagerProtocol {
-    func loadCharacters(dataCollected: @escaping ([CharacterModel]) -> ())
+    func loadCharacters(completion: @escaping ([CharacterModel]) -> ())
     func getDetails(url: String, completion: @escaping (DetailsModel?) -> ())
+    
+    func loadImage(from url: URL, completion: @escaping (Result<UIImage, Error>) -> Void)
 }
 
 final class DataManager: DataManagerProtocol {
@@ -22,7 +24,7 @@ final class DataManager: DataManagerProtocol {
         return components
     }()
     
-    func loadCharacters(dataCollected: @escaping ([CharacterModel]) -> ()) {
+    func loadCharacters(completion: @escaping ([CharacterModel]) -> ()) {
 
         components.path = "/api/character"
         guard let url = components.url?.absoluteString else { return }
@@ -35,7 +37,7 @@ final class DataManager: DataManagerProtocol {
                       let responseData = data {
                 let characterData = try? JSONDecoder().decode(CharactersData.self, from: responseData)
                 DispatchQueue.main.async {
-                    dataCollected(characterData?.results ?? [])
+                    completion(characterData?.results ?? [])
                 }
             }
         }
