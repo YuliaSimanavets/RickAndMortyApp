@@ -46,7 +46,6 @@ final class DataManager: DataManagerProtocol {
     
     func getDetails(url: String, completion: @escaping (DetailsModel?) -> ()) {
 
-        guard let url = components.url?.absoluteString else { return }
         let request = URLRequest(url: URL(string: url)!,timeoutInterval: Double.infinity)
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if error != nil {
