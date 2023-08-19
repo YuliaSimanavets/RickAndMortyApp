@@ -21,20 +21,13 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
 
     private enum Offset: CGFloat {
         case offset = 10
+        case textHeight = 20
     }
 
-    private let infoStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = Offset.offset.rawValue
-        stackView.alignment = .leading
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
     private let speciesLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .light)
+        label.text = "Speicies:"
         label.textColor = .title
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -44,6 +37,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     private let typeLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .light)
+        label.text = "Type:"
         label.textColor = .title
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -53,21 +47,13 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     private let genderLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .light)
+        label.text = "Gender:"
         label.textColor = .title
         label.textAlignment = .left
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    private let infoDataStackView: UIStackView = {
-        let stackView = UIStackView()
-        stackView.axis = .vertical
-        stackView.spacing = Offset.offset.rawValue
-        stackView.alignment = .trailing
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        return stackView
-    }()
-    
+
     private let speciesDataLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
@@ -99,40 +85,51 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
         super.setupView()
         backgroundColor = .backgroundForCell
         layer.cornerRadius = 10
+        
         addSubview(speciesLabel)
-        setupInfoStackView()
-        setupInfoDataStackView()
-        setupConstraints()
-    }
-    
-    private func setupInfoStackView() {
-        addSubview(infoStackView)
-        infoStackView.addSubview(speciesLabel)
-        infoStackView.addSubview(typeLabel)
-        infoStackView.addSubview(genderLabel)
-    }
+        addSubview(typeLabel)
+        addSubview(genderLabel)
+        addSubview(speciesDataLabel)
+        addSubview(typeDataLabel)
+        addSubview(genderDataLabel)
 
-    private func setupInfoDataStackView() {
-        addSubview(infoDataStackView)
-        infoDataStackView.addSubview(speciesDataLabel)
-        infoDataStackView.addSubview(typeDataLabel)
-        infoDataStackView.addSubview(genderDataLabel)
+        setupConstraints()
     }
     
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            infoStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
-            infoStackView.topAnchor.constraint(equalTo: topAnchor, constant: Offset.offset.rawValue),
-            infoStackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Offset.offset.rawValue),
-            infoStackView.trailingAnchor.constraint(equalTo: centerXAnchor),
+            speciesLabel.topAnchor.constraint(equalTo: topAnchor, constant: Offset.offset.rawValue * 2),
+            speciesLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Offset.offset.rawValue * 2),
+            speciesLabel.trailingAnchor.constraint(equalTo: centerXAnchor, constant: -Offset.offset.rawValue),
+            speciesLabel.heightAnchor.constraint(equalToConstant: Offset.textHeight.rawValue),
             
-            infoDataStackView.centerYAnchor.constraint(equalTo: infoStackView.centerYAnchor),
-//            infoDataStackView.topAnchor.constraint(equalTo: topAnchor, constant: Offset.offset.rawValue)
-            infoDataStackView.leadingAnchor.constraint(equalTo: centerXAnchor),
-            infoDataStackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Offset.offset.rawValue)
+            typeLabel.topAnchor.constraint(equalTo: speciesLabel.bottomAnchor, constant: Offset.offset.rawValue),
+            typeLabel.leadingAnchor.constraint(equalTo: speciesLabel.leadingAnchor),
+            typeLabel.trailingAnchor.constraint(equalTo: speciesLabel.trailingAnchor),
+            typeLabel.heightAnchor.constraint(equalToConstant: Offset.textHeight.rawValue),
+            
+            genderLabel.topAnchor.constraint(equalTo: typeLabel.bottomAnchor, constant: Offset.offset.rawValue),
+            genderLabel.leadingAnchor.constraint(equalTo: speciesLabel.leadingAnchor),
+            genderLabel.trailingAnchor.constraint(equalTo: speciesLabel.trailingAnchor),
+            genderLabel.heightAnchor.constraint(equalToConstant: Offset.textHeight.rawValue),
+            
+            speciesDataLabel.centerYAnchor.constraint(equalTo: speciesLabel.centerYAnchor),
+            speciesDataLabel.leadingAnchor.constraint(equalTo: centerXAnchor, constant: Offset.offset.rawValue),
+            speciesDataLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Offset.offset.rawValue * 2),
+            speciesDataLabel.heightAnchor.constraint(equalToConstant: Offset.textHeight.rawValue),
+            
+            typeDataLabel.centerYAnchor.constraint(equalTo: typeLabel.centerYAnchor),
+            typeDataLabel.leadingAnchor.constraint(equalTo: speciesDataLabel.leadingAnchor),
+            typeDataLabel.trailingAnchor.constraint(equalTo: speciesDataLabel.trailingAnchor),
+            typeDataLabel.heightAnchor.constraint(equalToConstant: Offset.textHeight.rawValue),
+            
+            genderDataLabel.centerYAnchor.constraint(equalTo: genderLabel.centerYAnchor),
+            genderDataLabel.leadingAnchor.constraint(equalTo: speciesDataLabel.leadingAnchor),
+            genderDataLabel.trailingAnchor.constraint(equalTo: speciesDataLabel.trailingAnchor),
+            genderDataLabel.heightAnchor.constraint(equalToConstant: Offset.textHeight.rawValue)
         ])
     }
-    
+
     func set(_ data: InfoViewModel) {
         speciesDataLabel.text = data.species
         typeDataLabel.text = data.type
@@ -140,7 +137,7 @@ class InfoCollectionViewCell: BaseCollectionViewCell {
     }
     
     static func size(_ data: InfoViewModel, containerSize: CGSize) -> CGSize {
-        let cellHeight: CGFloat = 100
+        let cellHeight: CGFloat = Offset.textHeight.rawValue * 3 + Offset.offset.rawValue * 6
         return .init(width: containerSize.width, height: cellHeight)
     }
 }
