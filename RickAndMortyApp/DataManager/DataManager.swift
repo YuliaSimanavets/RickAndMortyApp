@@ -10,9 +10,7 @@ import UIKit
 
 protocol DataManagerProtocol {
     func loadCharacters(completion: @escaping ([CharacterModel]) -> ())
-    func getDetails(url: String, completion: @escaping (DetailsModel?) -> ())
-    
-    func loadImage(from url: URL, completion: @escaping (Result<UIImage, Error>) -> Void)
+    func getData<T: Decodable>(url: String, completion: @escaping (T?) -> ())
 }
 
 final class DataManager: DataManagerProtocol {
@@ -44,7 +42,7 @@ final class DataManager: DataManagerProtocol {
         task.resume()
     }
     
-    func getDetails(url: String, completion: @escaping (DetailsModel?) -> ()) {
+    func getData<T: Decodable>(url: String, completion: @escaping (T?) -> ()) {
 
         let request = URLRequest(url: URL(string: url)!,timeoutInterval: Double.infinity)
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
@@ -53,7 +51,7 @@ final class DataManager: DataManagerProtocol {
             } else if let response = response as? HTTPURLResponse,
                       response.statusCode == 200,
                       let responseData = data {
-                let detailsData = try? JSONDecoder().decode(DetailsModel.self, from: responseData)
+                let detailsData = try? JSONDecoder().decode(T.self, from: responseData)
                 DispatchQueue.main.async {
                     completion(detailsData)
                 }

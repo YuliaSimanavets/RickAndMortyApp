@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct EpisodViewModel {
+struct EpisodeViewModel {
     let episodesName: String
     let episodeAndSeasonNumber: String
     let date: String
@@ -80,13 +80,13 @@ class EpisodeCollectionViewCell: BaseCollectionViewCell {
         ])
     }
     
-    func set(_ data: EpisodViewModel) {
+    func set(_ data: EpisodeViewModel) {
         episodesNameLabel.text = data.episodesName
         dateLabel.text = data.date
         episodeAndSeasonNumberLabel.text = data.episodeAndSeasonNumber
     }
     
-    static func size(_ data: EpisodViewModel, containerSize: CGSize) -> CGSize {
+    static func size(_ data: EpisodeViewModel, containerSize: CGSize) -> CGSize {
         let cellHeight: CGFloat = 20 + 15 + Offset.offset.rawValue * 6
         return .init(width: containerSize.width, height: cellHeight)
     }

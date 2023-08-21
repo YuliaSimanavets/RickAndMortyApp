@@ -14,7 +14,7 @@ class DetailsViewController: UIViewController {
         case header(HeaderViewModel)
         case infoBlock(InfoViewModel)
         case originBlock(OriginViewModel)
-        case episodesBlock(EpisodViewModel)
+        case episodesBlock(EpisodeViewModel)
     }
     
     private var dataManager: DataManagerProtocol?
@@ -98,37 +98,54 @@ class DetailsViewController: UIViewController {
     func set(dataManager: DataManagerProtocol) {
         self.dataManager = dataManager
     }
-    
+ 
     private func getInfoForCells() {
         
-        dataManager?.getDetails(url: characterURL, completion: { [weak self] details in
+        dataManager?.getData(url: characterURL, completion: { [weak self] (details: DetailsModel?) in
             guard let self else { return }
-
+            
             DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
+                self.activityIndicator.startAnimating()
                 self.detailsCollectionView.reloadData()
                 
-                let photoNameCell: PhotoNameViewModel = .init(photo: UIImage(systemName: "house"),
+                let photoNameCell: PhotoNameViewModel = .init(photo: UIImage(systemName: ""),
                                                               name: details?.name ?? "",
                                                               status: details?.status ?? "")
                 let infoHeaderCell: HeaderViewModel = .init(header: "Info")
                 let infoCell: InfoViewModel = .init(species: details?.species ?? "", type: details?.type ?? "None", gender: details?.gender ?? "")
-
+                
                 let originHeaderCell: HeaderViewModel = .init(header: "Origin")
                 let originCell: OriginViewModel = .init(origin: details?.origin.name ?? "")
                 
                 let episodesHeaderCell: HeaderViewModel = .init(header: "Episodes")
                 
-
+                
                 self.allCells = [.photoName(photoNameCell), .header(infoHeaderCell), .infoBlock(infoCell),
                                  .header(originHeaderCell), .originBlock(originCell),
                                  .header(episodesHeaderCell)]
                 
-
+                var episodeCell: [EpisodeViewModel] = []
+                var myEpisodes: [EpisodeModel] = []
+                
+                if let episodesUrl = details?.episode {
+                    for i in episodesUrl {
+                        self.dataManager?.getData(url: i) { (episode: EpisodeModel?) in
+                            if let episode = episode {
+                                myEpisodes.append(episode)
+                            }
+                        }
+                    }
+                }
+                
+                episodeCell = myEpisodes.map({ .init(episodesName: $0.name, episodeAndSeasonNumber: $0.episode, date: $0.airDate) })
+                
+                self.activityIndicator.stopAnimating()
+                for i in episodeCell {
+                    self.allCells.append(.episodesBlock(i))
+                }
+                self.detailsCollectionView.reloadData()
             }
         })
-
-        detailsCollectionView.reloadData()
     }
 }
 
