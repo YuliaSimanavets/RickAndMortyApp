@@ -112,7 +112,9 @@ class DetailsViewController: UIViewController {
                                                               name: details?.name ?? "",
                                                               status: details?.status ?? "")
                 let infoHeaderCell: HeaderViewModel = .init(header: "Info")
-                let infoCell: InfoViewModel = .init(species: details?.species ?? "", type: details?.type ?? "None", gender: details?.gender ?? "")
+                let infoCell: InfoViewModel = .init(species: details?.species ?? "",
+                                                    type: !(details?.type.isEmpty ?? true) ? (details?.type ?? "") : "None",
+                                                    gender: details?.gender ?? "")
                 
                 let originHeaderCell: HeaderViewModel = .init(header: "Origin")
                 let originCell: OriginViewModel = .init(origin: details?.origin.name ?? "")
@@ -132,6 +134,7 @@ class DetailsViewController: UIViewController {
                         self.dataManager?.getData(url: i) { (episode: EpisodeModel?) in
                             if let episode = episode {
                                 myEpisodes.append(episode)
+                                self.detailsCollectionView.reloadData()
                             }
                         }
                     }
