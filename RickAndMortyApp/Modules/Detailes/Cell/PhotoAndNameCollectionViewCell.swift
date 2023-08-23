@@ -28,6 +28,7 @@ class PhotoAndNameCollectionViewCell: BaseCollectionViewCell {
         imageView.layer.cornerRadius = 10
         imageView.backgroundColor = .white
         imageView.contentMode = .scaleAspectFit
+        imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
