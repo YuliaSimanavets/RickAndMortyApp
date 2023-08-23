@@ -118,7 +118,6 @@ class DetailsViewController: UIViewController {
             self.detailsCollectionView.reloadData()
             
             guard let imageUrl = details?.image else { return }
-            
             dispatchGroup.enter()
             dataManager?.loadImage(from: imageUrl) { image in
                 let photoNameCell: PhotoNameViewModel = .init(photo: image,
@@ -128,6 +127,18 @@ class DetailsViewController: UIViewController {
                 self.dispatchGroup.leave()
             }
 
+            guard let episodeUrl = details?.episode else { return }
+            for item in episodeUrl {
+                dispatchGroup.enter()
+                dataManager?.getData(url: item) { (episode: EpisodeModel?) in
+                    let episodeCell: EpisodeViewModel = .init(episodesName: episode?.name ?? "",
+                                                              episodeAndSeasonNumber: episode?.episode ?? "",
+                                                              date: episode?.airDate ?? "")
+                    self.allCells.append(.episodesBlock(episodeCell))
+                    self.dispatchGroup.leave()
+                }
+            }
+            
             let infoHeaderCell: HeaderViewModel = .init(header: "Info")
             let infoCell: InfoViewModel = .init(species: details?.species ?? "",
                                                 type: !(details?.type.isEmpty ?? true) ? (details?.type ?? "") : "None",
@@ -138,13 +149,11 @@ class DetailsViewController: UIViewController {
             
             let episodesHeaderCell: HeaderViewModel = .init(header: "Episodes")
             
-            
             self.allCells = [.header(infoHeaderCell), .infoBlock(infoCell),
                              .header(originHeaderCell), .originBlock(originCell),
                              .header(episodesHeaderCell)]
+            
             dispatchGroup.leave()
-            
-            
         })
     }
 }
