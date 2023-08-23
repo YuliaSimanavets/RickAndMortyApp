@@ -114,9 +114,6 @@ class DetailsViewController: UIViewController {
         dataManager?.getData(url: characterURL, completion: { [weak self] (details: DetailsModel?) in
             guard let self else { return }
             
-            self.activityIndicator.startAnimating()
-            self.detailsCollectionView.reloadData()
-            
             guard let imageUrl = details?.image else { return }
             dispatchGroup.enter()
             dataManager?.loadImage(from: imageUrl) { image in
