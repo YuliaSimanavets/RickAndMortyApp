@@ -16,6 +16,8 @@ class CharactersViewController: UIViewController {
     private var dataManager: DataManagerProtocol?
     private let activityIndicator = UIActivityIndicatorView()
     
+    private let dispatchGroup = DispatchGroup()
+    
     private let charactersLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 25, weight: .medium)
@@ -54,20 +56,35 @@ class CharactersViewController: UIViewController {
         
         createActivityIndicator()
         
-        dataManager?.loadCharacters { [weak self] characterArray in
-            guard let self else { return }
-            DispatchQueue.main.async {
-                self.activityIndicator.stopAnimating()
-                self.charactersCollectionView.reloadData()
-                
-                self.allCharacters = characterArray.map({ CharactersViewModel(image: UIImage(systemName: ""),  //
-                                                                              name: $0.name,
-                                                                              url: $0.url)
-                }).compactMap({ $0 })
-            }
+        getCharacters()
+        
+        dispatchGroup.notify(queue: .main) {
+            self.activityIndicator.stopAnimating()
+            self.charactersCollectionView.reloadData()
         }
 
         setupConstraints()
+    }
+    
+    private func getCharacters() {
+        
+        dispatchGroup.enter()
+        dataManager?.loadCharacters { [weak self] characterArray in
+            guard let self else { return }
+
+            for character in characterArray {
+                dispatchGroup.enter()
+                self.dataManager?.loadImage(from: character.image, completion: { image in
+                    
+                    self.allCharacters = characterArray.map({ CharactersViewModel(image: image,
+                                                                                  name: $0.name,
+                                                                                  url: $0.url)
+                    }).compactMap({ $0 })
+                    self.dispatchGroup.leave()
+                })
+            }
+            dispatchGroup.leave()
+        }
     }
     
     private func setupConstraints() {
