@@ -18,6 +18,8 @@ class DetailsViewController: UIViewController {
     }
     
     private var dataManager: DataManagerProtocol?
+    private let dispatchGroup = DispatchGroup()
+    
     private var characterURL: String = ""
     
     private let backButton: UIButton = {
@@ -41,6 +43,7 @@ class DetailsViewController: UIViewController {
     }()
     
     private var allCells = [CellType]()
+    private var imageUrl: String = ""
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,6 +69,12 @@ class DetailsViewController: UIViewController {
         createActivityIndicator()
 
         getInfoForCells()
+        
+        dispatchGroup.notify(queue: .main) {
+            self.activityIndicator.stopAnimating()
+            self.detailsCollectionView.reloadData()
+        }
+        
         setupConstraints()
     }
     
@@ -101,53 +110,41 @@ class DetailsViewController: UIViewController {
  
     private func getInfoForCells() {
         
+        dispatchGroup.enter()
         dataManager?.getData(url: characterURL, completion: { [weak self] (details: DetailsModel?) in
             guard let self else { return }
             
-            DispatchQueue.main.async {
-                self.activityIndicator.startAnimating()
-                self.detailsCollectionView.reloadData()
-                
-                let photoNameCell: PhotoNameViewModel = .init(photo: UIImage(systemName: ""),
+            self.activityIndicator.startAnimating()
+            self.detailsCollectionView.reloadData()
+            
+            guard let imageUrl = details?.image else { return }
+            
+            dispatchGroup.enter()
+            dataManager?.loadImage(from: imageUrl) { image in
+                let photoNameCell: PhotoNameViewModel = .init(photo: image,
                                                               name: details?.name ?? "",
                                                               status: details?.status ?? "")
-                let infoHeaderCell: HeaderViewModel = .init(header: "Info")
-                let infoCell: InfoViewModel = .init(species: details?.species ?? "",
-                                                    type: !(details?.type.isEmpty ?? true) ? (details?.type ?? "") : "None",
-                                                    gender: details?.gender ?? "")
-                
-                let originHeaderCell: HeaderViewModel = .init(header: "Origin")
-                let originCell: OriginViewModel = .init(origin: details?.origin.name ?? "")
-                
-                let episodesHeaderCell: HeaderViewModel = .init(header: "Episodes")
-                
-                
-                self.allCells = [.photoName(photoNameCell), .header(infoHeaderCell), .infoBlock(infoCell),
-                                 .header(originHeaderCell), .originBlock(originCell),
-                                 .header(episodesHeaderCell)]
-                
-                var episodeCell: [EpisodeViewModel] = []
-                var myEpisodes: [EpisodeModel] = []
-                
-                if let episodesUrl = details?.episode {
-                    for i in episodesUrl {
-                        self.dataManager?.getData(url: i) { (episode: EpisodeModel?) in
-                            if let episode = episode {
-                                myEpisodes.append(episode)
-                                self.detailsCollectionView.reloadData()
-                            }
-                        }
-                    }
-                }
-                
-                episodeCell = myEpisodes.map({ .init(episodesName: $0.name, episodeAndSeasonNumber: $0.episode, date: $0.airDate) })
-                
-                self.activityIndicator.stopAnimating()
-                for i in episodeCell {
-                    self.allCells.append(.episodesBlock(i))
-                }
-                self.detailsCollectionView.reloadData()
+                self.allCells.append(.photoName(photoNameCell))
+                self.dispatchGroup.leave()
             }
+
+            let infoHeaderCell: HeaderViewModel = .init(header: "Info")
+            let infoCell: InfoViewModel = .init(species: details?.species ?? "",
+                                                type: !(details?.type.isEmpty ?? true) ? (details?.type ?? "") : "None",
+                                                gender: details?.gender ?? "")
+            
+            let originHeaderCell: HeaderViewModel = .init(header: "Origin")
+            let originCell: OriginViewModel = .init(origin: details?.origin.name ?? "")
+            
+            let episodesHeaderCell: HeaderViewModel = .init(header: "Episodes")
+            
+            
+            self.allCells = [.header(infoHeaderCell), .infoBlock(infoCell),
+                             .header(originHeaderCell), .originBlock(originCell),
+                             .header(episodesHeaderCell)]
+            dispatchGroup.leave()
+            
+            
         })
     }
 }

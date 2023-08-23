@@ -11,6 +11,7 @@ import UIKit
 protocol DataManagerProtocol {
     func loadCharacters(completion: @escaping ([CharacterModel]) -> ())
     func getData<T: Decodable>(url: String, completion: @escaping (T?) -> ())
+    func loadImage(from url: String, completion: @escaping (UIImage) -> Void) 
 }
 
 final class DataManager: DataManagerProtocol {
@@ -59,4 +60,20 @@ final class DataManager: DataManagerProtocol {
         }
         task.resume()
     }
+    
+    func loadImage(from url: String, completion: @escaping (UIImage) -> Void) {
+        
+        let request = URLRequest(url: URL(string: url)!,timeoutInterval: Double.infinity)
+           URLSession.shared.dataTask(with: request) { data, response, error in
+               if let error = error {
+                   return
+               }
+               guard let data = data, let image = UIImage(data: data) else {
+                   return
+               }
+               DispatchQueue.main.async {
+                   completion(image)
+               }
+           }.resume()
+       }
 }
