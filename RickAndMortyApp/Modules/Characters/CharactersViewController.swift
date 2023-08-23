@@ -55,14 +55,7 @@ class CharactersViewController: UIViewController {
                                           forCellWithReuseIdentifier: CharactersCollectionViewCell.identifier)
         
         createActivityIndicator()
-        
         getCharacters()
-        
-        dispatchGroup.notify(queue: .main) {
-            self.activityIndicator.stopAnimating()
-            self.charactersCollectionView.reloadData()
-        }
-
         setupConstraints()
     }
     
@@ -70,21 +63,29 @@ class CharactersViewController: UIViewController {
         
         dispatchGroup.enter()
         dataManager?.loadCharacters { [weak self] characterArray in
-            guard let self else { return }
-
+            guard let self = self else { return }
+            
+            var charactersViewModels: [CharactersViewModel] = []
+            
             for character in characterArray {
-                dispatchGroup.enter()
-                self.dataManager?.loadImage(from: character.image, completion: { image in
-                    
-                    self.allCharacters = characterArray.map({ CharactersViewModel(image: image,
-                                                                                  name: $0.name,
-                                                                                  url: $0.url)
-                    }).compactMap({ $0 })
-                    self.dispatchGroup.leave()
-                })
+                self.dispatchGroup.enter()
+                self.dataManager?.loadImage(from: character.image) { image in
+                    defer {
+                        self.dispatchGroup.leave()
+                    }
+                    let characterViewModel = CharactersViewModel(image: image,
+                                                                 name: character.name,
+                                                                 url: character.url)
+                    charactersViewModels.append(characterViewModel)
+                }
             }
-            dispatchGroup.leave()
+            self.dispatchGroup.notify(queue: .main) {
+                self.allCharacters = charactersViewModels
+                self.activityIndicator.stopAnimating()
+                self.charactersCollectionView.reloadData()
+            }
         }
+        dispatchGroup.leave()
     }
     
     private func setupConstraints() {
